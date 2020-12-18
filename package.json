@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "lowdb": "^1.0.0",
+    "node-fetch": "^2.6.1"
+  }
+}
