@@ -3,7 +3,9 @@ const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
 
 // db stuff
-const adapter = new FileSync('db.json')
+const adapter = new FileSync('db.json', {
+  serialize: data => JSON.stringify(data)
+})
 const db = low(adapter)
 db.defaults({
   portfolio: [],
