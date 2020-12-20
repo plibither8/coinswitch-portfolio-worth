@@ -1,6 +1,13 @@
+require('dotenv').config()
+
 const fetch = require('node-fetch')
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
+
+const {
+  TG_BOT_NAME,
+  TG_BOT_SECRET
+} = process.env
 
 // db stuff
 const adapter = new FileSync('db.json', {
@@ -59,6 +66,10 @@ const getWorth = async () => {
   const delta = log.totalWorth - previousTotalWorth
   const relativeDelta = (delta / previousTotalWorth * 100).toFixed(2)
 
+  if (Math.abs(relativeDelta) >= 1) {
+    notify(delta, relativeDelta, log.totalWorth);
+  }
+
   console.log(
     `[%s] INR %s %s%s / %s% \u001b[0m`,
     new Date().toLocaleTimeString(),
@@ -69,6 +80,24 @@ const getWorth = async () => {
   )
 
   previousTotalWorth = log.totalWorth
+}
+
+const notify = async (delta, relativeDelta, totalWorth) => {
+  let message = `*${relativeDelta > 0 ? '📈' : '📉'} Change in Portfolio Worth!*\n`
+
+  message += `\n*Total worth:* ₹${Intl.NumberFormat('en-IN').format(totalWorth)}/-`
+  message += `\n*Change:* ₹${Intl.NumberFormat('en-IN').format(delta)}/- (${relativeDelta >= 0 ? '+' : ''}${relativeDelta}%)`
+
+  await fetch(`https://tg.mihir.ch/${TG_BOT_NAME}`, {
+    method: 'POST',
+    body: JSON.stringify({
+      text: message,
+      secret: TG_BOT_SECRET
+    }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
 }
 
 const main = async () => {
