@@ -86,8 +86,8 @@ const notify = async (delta, relativeDelta, totalWorth) => {
   const symbol = relativeDelta > 0 ? '🟩' : '🟥'
   const symbols = new Array(Math.floor(Math.abs(relativeDelta) / 0.25) - 1).fill(symbol).join('')
   const message = [
-    `*${symbols} Change in Portfolio Worth!*\n`,
-    `\n*Total worth:* ₹${Intl.NumberFormat('en-IN').format(totalWorth)}/-`,
+    `${symbols}`,
+    `\n*Worth:* ₹${Intl.NumberFormat('en-IN').format(totalWorth)}/-`,
     `\n*Change:* ₹${Intl.NumberFormat('en-IN').format(delta)}/-`,
     ` (${relativeDelta >= 0 ? '+' : ''}${relativeDelta}%)`
   ].join('')
