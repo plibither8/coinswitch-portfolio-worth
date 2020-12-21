@@ -66,7 +66,7 @@ const getWorth = async () => {
   const delta = log.totalWorth - previousTotalWorth
   const relativeDelta = (delta / previousTotalWorth * 100).toFixed(2)
 
-  if (Math.abs(relativeDelta) >= 1) {
+  if (Math.abs(relativeDelta) >= 0.5) {
     notify(delta, relativeDelta, log.totalWorth);
   }
 
@@ -83,7 +83,9 @@ const getWorth = async () => {
 }
 
 const notify = async (delta, relativeDelta, totalWorth) => {
-  let message = `*${relativeDelta > 0 ? '📈' : '📉'} Change in Portfolio Worth!*\n`
+  let symbol = relativeDelta > 0 ? '🟩' : '🟥'
+  let symbols = new Array(Math.floor(Math.abs(relativeDelta) / 0.25) - 1).fill(symbol).join('')
+  let message = `*${symbols} Change in Portfolio Worth!*\n`
 
   message += `\n*Total worth:* ₹${Intl.NumberFormat('en-IN').format(totalWorth)}/-`
   message += `\n*Change:* ₹${Intl.NumberFormat('en-IN').format(delta)}/- (${relativeDelta >= 0 ? '+' : ''}${relativeDelta}%)`
