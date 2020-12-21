@@ -83,12 +83,14 @@ const getWorth = async () => {
 }
 
 const notify = async (delta, relativeDelta, totalWorth) => {
-  let symbol = relativeDelta > 0 ? '🟩' : '🟥'
-  let symbols = new Array(Math.floor(Math.abs(relativeDelta) / 0.25) - 1).fill(symbol).join('')
-  let message = `*${symbols} Change in Portfolio Worth!*\n`
-
-  message += `\n*Total worth:* ₹${Intl.NumberFormat('en-IN').format(totalWorth)}/-`
-  message += `\n*Change:* ₹${Intl.NumberFormat('en-IN').format(delta)}/- (${relativeDelta >= 0 ? '+' : ''}${relativeDelta}%)`
+  const symbol = relativeDelta > 0 ? '🟩' : '🟥'
+  const symbols = new Array(Math.floor(Math.abs(relativeDelta) / 0.25) - 1).fill(symbol).join('')
+  const message = [
+    `*${symbols} Change in Portfolio Worth!*\n`,
+    `\n*Total worth:* ₹${Intl.NumberFormat('en-IN').format(totalWorth)}/-`,
+    `\n*Change:* ₹${Intl.NumberFormat('en-IN').format(delta)}/-`,
+    ` (${relativeDelta >= 0 ? '+' : ''}${relativeDelta}%)`
+  ].join('')
 
   await fetch(`https://tg.mihir.ch/${TG_BOT_NAME}`, {
     method: 'POST',
