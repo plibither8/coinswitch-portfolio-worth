@@ -24,9 +24,11 @@ const API = {
   portfolio: 'http://localhost:5000/portfolio'
 }
 
-let previousTotalWorth = 0
-
 const getWorth = async () => {
+  let previousTotalWorth = 0
+  const lastEntry = db.get('logs').value().pop()
+  if (lastEntry) previousTotalWorth = Number(lastEntry.totalWorth)
+
   const requests = []
 
   const { data: portfolio } = await fetch(API.portfolio).then(res => res.json())
@@ -78,8 +80,6 @@ const getWorth = async () => {
     delta < 0 ? delta.toFixed(2) : '+' + delta.toFixed(2),
     delta < 0 ? relativeDelta : '+' + relativeDelta
   )
-
-  previousTotalWorth = log.totalWorth
 }
 
 const notify = async (delta, relativeDelta, totalWorth) => {
@@ -104,9 +104,7 @@ const notify = async (delta, relativeDelta, totalWorth) => {
   })
 }
 
-const main = async () => {
-  let lastEntry = db.get('logs').value().pop()
-  if (lastEntry) previousTotalWorth = Number(lastEntry.totalWorth)
+const main = () => {
   getWorth()
   setInterval(getWorth, 300000); // 5 minutes
 }
